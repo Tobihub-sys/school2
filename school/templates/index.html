@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Student Management System</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        max-width: 800px;
+        margin: 0 auto;
+      }
+      form {
+        margin-top: 20px;
+      }
+      label {
+        display: block;
+        margin-top: 10px;
+      }
+      button {
+        margin-top: 10px;
+      }
+      h1,
+      h2 {
+        text-align: center;
+      }
+      ul {
+        list-style-type: none;
+        padding: 0;
+      }
+      /* Add this CSS to your <style> section */
+      ul.flash-messages {
+        padding: 10px;
+        list-style-type: none;
+      }
+
+      ul.flash-messages li {
+        margin-bottom: 10px;
+        padding: 10px;
+        border-radius: 5px;
+      }
+
+      ul.flash-messages li.success {
+        background-color: #d4edda;
+        color: #155724;
+      }
+
+      ul.flash-messages li.error {
+        background-color: #f8d7da;
+        color: #721c24;
+      }
+    </style>
+    <script>
+      function moveToNextInput(currentInput, event) {
+        if (event.keyCode === 13) {
+          event.preventDefault();
+          const form = currentInput.form;
+          const index = Array.prototype.indexOf.call(form, currentInput);
+          const nextInput = form.elements[index + 1];
+          if (nextInput) {
+            nextInput.focus();
+          }
+        }
+      }
+    </script>
+  </head>
+  <body>
+    <h1>Student Management System</h1>
+    {% with messages = get_flashed_messages() %} {% if messages %}
+    <ul class="flash-messages">
+      {% for message in messages %}
+      <li>{{ message }}</li>
+      {% endfor %}
+    </ul>
+    {% endif %} {% endwith %}
+
+    <!-- Add Student Form -->
+    <form action="/add_student" method="post">
+      <h2>Add Student</h2>
+      <label for="student_number">Student Number:</label>
+      <input
+        type="text"
+        name="student_number"
+        required
+        onkeydown="moveToNextInput(this, event)"
+      /><br />
+
+      <label for="name">Name:</label>
+      <input
+        type="text"
+        name="name"
+        required
+        onkeydown="moveToNextInput(this, event)"
+      /><br />
+
+      <label for="nickname">Nickname:</label>
+      <input
+        type="text"
+        name="nickname"
+        required
+        onkeydown="moveToNextInput(this, event)"
+      /><br />
+
+      <label for="age">Age:</label>
+      <input
+        type="number"
+        name="age"
+        required
+        onkeydown="moveToNextInput(this, event)"
+      /><br />
+
+      <label for="grade">Grade:</label>
+      <input
+        type="number"
+        name="grade"
+        required
+        onkeydown="moveToNextInput(this, event)"
+      /><br />
+
+      <label for="registration_date">Registration Date:</label>
+      <input
+        type="text"
+        name="registration_date"
+        required
+        onkeydown="moveToNextInput(this, event)"
+      /><br />
+
+      <label for="lessons">Lessons:</label>
+      <input
+        type="text"
+        name="lessons"
+        onkeydown="moveToNextInput(this, event)"
+      /><br />
+
+      <button type="submit">Add Student</button>
+    </form>
+
+    <!-- Delete Student Form -->
+    <form action="/delete_student" method="post">
+      <h2>Delete Student</h2>
+      <label for="student_number">Student Number:</label>
+      <input type="text" name="student_number" required /><br />
+      <button type="submit">Delete Student</button>
+    </form>
+
+    <!-- Update Student Form -->
+    <form action="/update_student" method="post">
+      <h2>Update Student</h2>
+      <label for="student_number">Student Number:</label>
+      <input type="text" name="student_number" required /><br />
+
+      <label for="name">Name:</label>
+      <input type="text" name="name" required /><br />
+
+      <label for="nickname">Nickname:</label>
+      <input type="text" name="nickname" required /><br />
+
+      <label for="age">Age:</label>
+      <input
+        type="number"
+        name="age"
+        required
+        onkeydown="moveToNextInput(this, event)"
+      /><br />
+
+      <label for="grade">Grade:</label>
+      <input
+        type="number"
+        name="grade"
+        required
+        onkeydown="moveToNextInput(this, event)"
+      /><br />
+
+      <!-- Update the following line to use type="text" for the registration_date -->
+      <label for="registration_date">Registration Date (DD/MM/YYYY):</label>
+      <input
+        type="text"
+        name="registration_date"
+        required
+        onkeydown="moveToNextInput(this, event)"
+      /><br />
+
+      <label for="lessons">Lessons:</label>
+      <input type="text" name="lessons" /><br />
+
+      <button type="submit">Update Student</button>
+    </form>
+
+    <!-- View Student Form -->
+    <form action="/view_student" method="post">
+      <h2>View Student</h2>
+      <label for="student_number">Student Number:</label>
+      <input type="text" name="student_number" required /><br />
+      <button type="submit">View Student</button>
+    </form>
+
+    <!-- View Student Information -->
+    {% if view_student_info %}
+    <h2>Student Information:</h2>
+    <ul>
+      <li>Student Number: {{ view_student_info[0] }}</li>
+      <li>Name: {{ view_student_info[1] }}</li>
+      <li>Nickname: {{ view_student_info[2] }}</li>
+      <li>Age: {{ view_student_info[3] }}</li>
+      <li>Grade: {{ view_student_info[4] }}</li>
+      <li>Registration Date: {{ view_student_info[5] }}</li>
+    </ul>
+
+    {% if view_lessons %}
+    <h2>Lessons:</h2>
+    <ul>
+      {% for lesson in view_lessons %}
+      <li>{{ lesson[0] }}</li>
+      {% endfor %}
+    </ul>
+    {% else %}
+    <p>No lessons found for this student.</p>
+    {% endif %} {% else %} {% if view_student_error %}
+    <p>{{ view_student_error }}</p>
+    {% endif %} {% endif %}
+  </body>
+</html>
